@@ -46,36 +46,13 @@ class LeftColumn(ctk.CTkFrame):
     def open_stock_chooser(self):
         hp.create_window(self)
 
-    def create_stockBox(self, ticker):
+    def create_stockBox(self, ticker, tickerPrice):
         stock_box = ctk.CTkFrame(self.stocksFrame, height=100)
         stock_box.pack(fill='x', pady=2)
         stock_box.pack_propagate(False)
-        
-        currentPrice = getStockPrice(ticker)
-
-        stock_box_label = ctk.CTkLabel(stock_box, text=f"{ticker}         ${currentPrice:.2f}", anchor='w')
+        stock_box_label = ctk.CTkLabel(stock_box, text=f"{ticker}         ${tickerPrice:.2f}", anchor='w')
         stock_box_label.pack(side='left', padx=10)
 
-def getStockPrice(stock):
-    ticker = yf.Ticker(stock)
-
-    # Try to fetch data for today
-    stockPrice = ticker.history(period='1d')
-
-    # If no data for today, fetch data for the previous days until one is found
-    if stockPrice.empty:
-        for i in range(2, 5):  # Adjust the range based on your needs
-            stockPrice = ticker.history(period=f'{i}d')
-            if not stockPrice.empty:
-                break
-
-    if stockPrice.empty:
-        raise ValueError(f"No data available for {stock} for today or the past 4 days.")
-
-    # Get the latest available close price
-    latest_price = stockPrice['Close'].iloc[-1]
-
-    return latest_price
 
 class MiddleColumn(ctk.CTkFrame):
     def __init__(self, parent):
