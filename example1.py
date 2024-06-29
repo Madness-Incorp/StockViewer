@@ -1,61 +1,51 @@
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
-import customtkinter as ctk
-import yfinance as yf
-import Main as main
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-class Extra(ctk.CTkToplevel):
-    def __init__(self):
-        super().__init__()
-        self.title('Choose Stock')
-        self.geometry('800x600')
-        self.attributes('-topmost', True)
+data1 = {
+    "country": ["A", "B", "C", "D", "E"],
+    "gdp_per_capita": [45000, 42000, 52000, 49000, 47000],
+}
+df1 = pd.DataFrame(data1)
 
-        # Search Frame
-        search_frame = ctk.CTkFrame(self)
-        search_frame.pack(pady=20)
+data2 = {
+    "year": [1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010],
+    "unemployment_rate": [9.8, 12, 8, 7.2, 6.9, 7, 6.5, 6.2, 5.5, 6.3],
+}
+df2 = pd.DataFrame(data2)
 
-        self.search_entry = ctk.CTkEntry(search_frame, placeholder_text="Enter Stock Ticker", width=300)
-        self.search_entry.pack(padx=10)
-        self.search_entry.bind('<Return>', self.add_selected_stock)
+data3 = {
+    "interest_rate": [5, 5.5, 6, 5.5, 5.25, 6.5, 7, 8, 7.5, 8.5],
+    "index_price": [1500, 1520, 1525, 1523, 1515, 1540, 1545, 1560, 1555, 1565],
+}
+df3 = pd.DataFrame(data3)
 
-        # Selected Stock Frame
-        selected_stock_frame = ctk.CTkFrame(self)
-        selected_stock_frame.pack(pady=20)
+root = tk.Tk()
 
-        selected_stock_label = ctk.CTkLabel(selected_stock_frame, text="Selected Stocks:")
-        selected_stock_label.pack(pady=5)
+figure1 = plt.Figure(figsize=(6, 5), dpi=100)
+ax1 = figure1.add_subplot(111)
+bar1 = FigureCanvasTkAgg(figure1, root)
+bar1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+df1 = df1[["country", "gdp_per_capita"]].groupby("country").sum()
+df1.plot(kind="bar", legend=True, ax=ax1)
+ax1.set_title("Country Vs. GDP Per Capita")
 
-        self.selected_stock_listbox = tk.Listbox(selected_stock_frame, width=50, height=10)
-        self.selected_stock_listbox.pack(pady=10)
+figure2 = plt.Figure(figsize=(5, 4), dpi=100)
+ax2 = figure2.add_subplot(111)
+line2 = FigureCanvasTkAgg(figure2, root)
+line2.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+df2 = df2[["year", "unemployment_rate"]].groupby("year").sum()
+df2.plot(kind="line", legend=True, ax=ax2, color="r", marker="o", fontsize=10)
+ax2.set_title("Year Vs. Unemployment Rate")
 
-        self.selected_stocks = set()  # To keep track of selected stocks
+figure3 = plt.Figure(figsize=(5, 4), dpi=100)
+ax3 = figure3.add_subplot(111)
+ax3.scatter(df3["interest_rate"], df3["index_price"], color="g")
+scatter3 = FigureCanvasTkAgg(figure3, root)
+scatter3.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+ax3.legend(["index_price"])
+ax3.set_xlabel("Interest Rate")
+ax3.set_title("Interest Rate Vs. Index Price")
 
-    def fetch_stock_data(self, ticker):
-        stock = yf.Ticker(ticker)
-        try:
-            info = stock.info
-            return f"{info['symbol']} - {info['shortName']}"
-        except Exception:
-            return None
-
-    def add_selected_stock(self, event):
-        ticker = self.search_entry.get().strip().upper()
-        if ticker in self.selected_stocks:
-            messagebox.showwarning("Warning", "Stock already selected")
-            return
-        result = self.fetch_stock_data(ticker)
-        if result:
-            self.selected_stocks.add(ticker)
-            self.selected_stock_listbox.insert(tk.END, result)
-            self.search_entry.delete(0, tk.END)
-            main.LeftColumn.create_stockBox(ticker)
-        else:
-            messagebox.showerror("Error", "Ticker could not be found")
-
-def create_window():
-    stock_chooser_window = Extra()
-    stock_chooser_window.mainloop()
-
-create_window()
+root.mainloop()
