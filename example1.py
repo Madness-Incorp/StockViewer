@@ -1,27 +1,37 @@
-import tkinter as tk
-import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import yfinance as yf
 
-# Fetch Tesla stock data
-tsla = yf.Ticker("TSLA")
-hist = tsla.history(period="1y")
+# Sample data
+x = [0, 1, 2, 3, 4, 5]
+y = [0, 1, 4, 9, 16, 25]
 
-# Create the main Tkinter window
-root = tk.Tk()
+# Create a figure and axis
+fig, ax = plt.subplots()
 
-# Create a figure for plotting
-figure2 = plt.Figure(figsize=(5, 4), dpi=100)
-ax2 = figure2.add_subplot(111)
+# Plot data
+ax.plot(x, y)
 
-# Create a FigureCanvasTkAgg widget to display the plot
-line2 = FigureCanvasTkAgg(figure2, root)
-line2.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+# Move the y-axis labels to the right side
+ax.yaxis.tick_right()
+ax.yaxis.set_label_position("right")
 
-# Plot the 'Close' price of Tesla stock
-hist['Close'].plot(kind="line", legend=True, ax=ax2, color="r", marker="o", fontsize=10)
-ax2.set_title("Tesla Stock Price (1 Year)")
+# Customize the color of the axes
+ax.spines['bottom'].set_color('blue')
+ax.spines['top'].set_color('red')
+ax.spines['left'].set_color('green')
+ax.spines['right'].set_color('purple')
 
-# Start the Tkinter event loop
-root.mainloop()
+# Customize the ticks color
+ax.tick_params(axis='x', colors='blue')
+ax.tick_params(axis='y', colors='purple')
+
+# Customize the label color
+ax.xaxis.label.set_color('blue')
+ax.yaxis.label.set_color('purple')
+
+# Add labels and title
+ax.set_xlabel('X Axis')
+ax.set_ylabel('Y Axis')
+ax.set_title('Customized Matplotlib Graph')
+
+# Show the plot
+plt.show()

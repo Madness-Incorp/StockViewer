@@ -43,6 +43,8 @@ class Extra(ctk.CTkToplevel):
 
     def add_selected_stock(self, event):
         ticker = self.search_entry.get().strip().upper()
+        global current
+        current = ticker
         if ticker in self.selected_stocks:
             messagebox.showwarning("Warning", "Stock already selected")
             return
@@ -51,13 +53,14 @@ class Extra(ctk.CTkToplevel):
             self.selected_stocks.add(ticker)
             self.selected_stock_listbox.insert(tk.END, result)
             self.search_entry.delete(0, tk.END)
-            self.add_stock_to_parent(result, actStock)
+            self.add_stock_to_parent(ticker, actStock)
         else:
             messagebox.showerror("Error", "Ticker could not be found")
 
     def add_stock_to_parent(self, stock_info, orgTicker):
         price = getStockPrice(orgTicker)
         self.parent.create_stockBox(stock_info, price)
+        self.destroy()
 
 def getStockPrice(stock):
         ticker = stock
@@ -83,3 +86,5 @@ def getStockPrice(stock):
 def create_window(parent):
     stock_chooser_window = Extra(parent)
     stock_chooser_window.mainloop()
+
+        
