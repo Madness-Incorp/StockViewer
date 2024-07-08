@@ -4,6 +4,9 @@ import Helpers as hp
 import yfinance as yf
 import StockGraph as sg
 
+global tickerMap
+tickerMap = {}
+
 class Main(ctk.CTk):
     def __init__(self, title):
         super().__init__()
@@ -35,7 +38,6 @@ class LeftColumn(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.tickerMap = {}
         self.parent = parent
         self.middle_column = None
 
@@ -68,12 +70,12 @@ class LeftColumn(ctk.CTkFrame):
         
         stock_box_button.place(relx=0, rely=0, relwidth=1, relheight=1)
 
-        self.tickerMap[stock_box_button.winfo_id()] = hp.current
+        tickerMap[stock_box_button.winfo_id()] = hp.current
         
         stock_box.pack_propagate(False)
 
     def printGraph(self, id):
-        ticker = self.tickerMap[id]
+        ticker = tickerMap[id]
         sg.StockGraph.createGraph(ticker, self.middle_column.stock_graph_frame)
 
 class MiddleColumn(ctk.CTkFrame):

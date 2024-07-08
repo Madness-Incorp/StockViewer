@@ -2,34 +2,23 @@ import tkinter as tk
 from tkinter import messagebox
 import customtkinter as ctk
 import yfinance as yf
+import Main as main
 
 class Extra(ctk.CTkToplevel):
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
         self.title('Choose Stock')
-        self.geometry('800x600')
+        self.geometry('400x200')
         self.attributes('-topmost', True)
 
         # Search Frame
         search_frame = ctk.CTkFrame(self)
         search_frame.pack(pady=20)
 
-        self.search_entry = ctk.CTkEntry(search_frame, placeholder_text="Enter Stock Ticker", width=300)
-        self.search_entry.pack(padx=10)
+        self.search_entry = ctk.CTkEntry(search_frame, placeholder_text="Enter Stock Ticker", width=400)
+        self.search_entry.place(rely = 0.4)
         self.search_entry.bind('<Return>', self.add_selected_stock)
-
-        # Selected Stock Frame
-        selected_stock_frame = ctk.CTkFrame(self)
-        selected_stock_frame.pack(pady=20)
-
-        selected_stock_label = ctk.CTkLabel(selected_stock_frame, text="Selected Stocks:")
-        selected_stock_label.pack(pady=5)
-
-        self.selected_stock_listbox = tk.Listbox(selected_stock_frame, width=50, height=10)
-        self.selected_stock_listbox.pack(pady=10)
-
-        self.selected_stocks = set()  # To keep track of selected stocks
 
     def fetch_stock_data(self, ticker):
         global actStock
@@ -45,13 +34,11 @@ class Extra(ctk.CTkToplevel):
         ticker = self.search_entry.get().strip().upper()
         global current
         current = ticker
-        if ticker in self.selected_stocks:
+        if ticker in main.tickerMap:
             messagebox.showwarning("Warning", "Stock already selected")
             return
         result = self.fetch_stock_data(ticker)
         if result:
-            self.selected_stocks.add(ticker)
-            self.selected_stock_listbox.insert(tk.END, result)
             self.search_entry.delete(0, tk.END)
             self.add_stock_to_parent(ticker, actStock)
         else:
