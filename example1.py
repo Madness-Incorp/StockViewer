@@ -13,6 +13,7 @@ ax.plot(x, y)
 # Move the y-axis labels to the right side
 ax.yaxis.tick_right()
 ax.yaxis.set_label_position("right")
+ax.patch.set_facecolor('black')
 
 # Customize the color of the axes
 ax.spines['bottom'].set_color('blue')
