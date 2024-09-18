@@ -4,6 +4,8 @@ import customtkinter as ctk
 import yfinance as yf
 import Main as main
 
+global current
+
 class Extra(ctk.CTkToplevel):
     def __init__(self, parent):
         super().__init__()
@@ -46,7 +48,7 @@ class Extra(ctk.CTkToplevel):
 
     def add_stock_to_parent(self, stock_info, orgTicker):
         price = getStockPrice(orgTicker)
-        self.parent.create_stockBox(stock_info, price)
+        self.parent.create_stockBox(stock_info, price, 0)
         self.destroy()
 
 def getStockPrice(stock):

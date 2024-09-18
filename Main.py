@@ -1,11 +1,15 @@
 import tkinter as tk
+from cProfile import label
+from tkinter import mainloop
+
 import customtkinter as ctk
 import Helpers as hp
-import yfinance as yf
 import StockGraph as sg
+import csvHelpers as csvH
 
 global tickerMap
 tickerMap = {}
+global csvLocation
 
 class Main(ctk.CTk):
     def __init__(self, title):
@@ -23,7 +27,7 @@ class Main(ctk.CTk):
         # Create frame objects for each column
         self.left_column = LeftColumn(self)
         self.middle_column = MiddleColumn(self)
-        self.right_column = RightColumn(self)
+        self.right_column = RightColumn(self, self.left_column)
 
         # Add frames to the grid layout
         self.left_column.grid(row=0, rowspan=2, column=0, sticky="nsew")
@@ -35,9 +39,11 @@ class Main(ctk.CTk):
         self.mainloop()
 
 class LeftColumn(ctk.CTkFrame):
+    csvStockCreated = False
     def __init__(self, parent):
         super().__init__(parent)
 
+        self.stock_label = None
         self.parent = parent
         self.middle_column = None
 
@@ -60,23 +66,38 @@ class LeftColumn(ctk.CTkFrame):
     def set_middle_column(self, middle_column):
         self.middle_column = middle_column    
 
-    def create_stockBox(self, ticker, tickerPrice):
+    def create_stockBox(self, ticker, tickerPrice, flag):
         stock_box = ctk.CTkFrame(self.stocksFrame, height=50, width=10)
         stock_box.columnconfigure(0, weight=1)
         stock_box.columnconfigure(1, weight=1)
-        stock_box.pack(fill='x', pady=2)  # Keep pack for horizontal fill
+        if self.csvStockCreated and flag == 1:
+            stock_box.pack(after = self.stock_label,fill='x', pady=2)
+        elif self.csvStockCreated and flag == 0:
+            stock_box.pack(before = self.stock_label,fill='x', pady=2)
+        else:
+            stock_box.pack(fill='x', pady=2)
 
         stock_box_button = ctk.CTkButton(stock_box, text=ticker + "    " + f"${tickerPrice:.2f}", bg_color='grey', fg_color='grey', command=lambda: self.printGraph(stock_box_button.winfo_id()))
-        
+
         stock_box_button.place(relx=0, rely=0, relwidth=1, relheight=1)
 
-        tickerMap[stock_box_button.winfo_id()] = hp.current
-        
+        if flag == 0:
+            tickerMap[stock_box_button.winfo_id()] = hp.current
+        else:
+            tickerMap[stock_box_button.winfo_id()] = ticker
+
         stock_box.pack_propagate(False)
 
     def printGraph(self, id):
         ticker = tickerMap[id]
         sg.StockGraph.createGraph(ticker, self.middle_column.stock_graph_frame)
+
+    def addStocksCsv(self):
+        self.stock_label = ctk.CTkLabel(self.stocksFrame, text="Stocks from CSV", fg_color='grey', bg_color='grey')
+        self.stock_label.pack()
+        self.csvStockCreated = True
+        csvH.create_window(self)
+
 
 class MiddleColumn(ctk.CTkFrame):
     def __init__(self, parent):
@@ -94,12 +115,18 @@ class MiddleColumn(ctk.CTkFrame):
         # (Add other UI elements for the middle column)
 
 class RightColumn(ctk.CTkFrame):
-    def __init__(self, parent):
+    def __init__(self, parent, left_column):
         super().__init__(parent)
+        self.left_column = left_column
         # Add UI elements for the right column here (watchlists, settings, etc.)
         self.watchlist_label = ctk.CTkLabel(self, text="News")
         self.watchlist_label.pack()
-        # (Add other UI elements for the right column)
 
+        self.csvButton = ctk.CTkButton(self, text="View a CSV", bg_color='grey', fg_color='grey', command=self.open_csvFinder)
+        self.csvButton.pack()
+
+    def open_csvFinder(self):
+        self.left_column.addStocksCsv()
+        # (Add other UI elements for the right column)
 if __name__ == "__main__":
     Main('Stock Viewer')
