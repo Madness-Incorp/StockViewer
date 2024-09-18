@@ -1,7 +1,3 @@
-import tkinter as tk
-from cProfile import label
-from tkinter import mainloop
-
 import customtkinter as ctk
 import Helpers as hp
 import StockGraph as sg
@@ -93,8 +89,9 @@ class LeftColumn(ctk.CTkFrame):
         sg.StockGraph.createGraph(ticker, self.middle_column.stock_graph_frame)
 
     def addStocksCsv(self):
-        self.stock_label = ctk.CTkLabel(self.stocksFrame, text="Stocks from CSV", fg_color='grey', bg_color='grey')
-        self.stock_label.pack()
+        if not self.csvStockCreated:
+            self.stock_label = ctk.CTkLabel(self.stocksFrame, text="Stocks from CSV", fg_color='grey', bg_color='grey')
+            self.stock_label.pack()
         self.csvStockCreated = True
         csvH.create_window(self)
 
