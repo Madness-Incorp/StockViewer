@@ -1,3 +1,5 @@
+import subprocess
+
 import customtkinter as ctk
 import Helpers as hp
 import StockGraph as sg
@@ -123,6 +125,8 @@ class RightColumn(ctk.CTkFrame):
         self.csvButton.pack()
 
     def open_csvFinder(self):
+        java_cmd = ['java', 'Take_Data']
+        subprocess.Popen(java_cmd)
         self.left_column.addStocksCsv()
         # (Add other UI elements for the right column)
 if __name__ == "__main__":
