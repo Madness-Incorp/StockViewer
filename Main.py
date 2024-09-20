@@ -4,6 +4,7 @@ import customtkinter as ctk
 import Helpers as hp
 import StockGraph as sg
 import csvHelpers as csvH
+import subprocess
 
 global tickerMap
 tickerMap = {}
@@ -55,14 +56,13 @@ class LeftColumn(ctk.CTkFrame):
         self.adder_button = ctk.CTkButton(self.leftTopFrame, text="+", bg_color='grey', fg_color='grey', text_color='green', width=10, height=10, corner_radius=10, command=self.open_stock_chooser)
         self.adder_button.pack(side='right', pady=10)
 
-        self.stocksFrame = ctk.CTkFrame(self, width=10)
-        self.stocksFrame.pack(fill='both', expand=False, pady=10)
-
+        self.stocksFrame = ctk.CTkScrollableFrame(self, width=10)
+        self.stocksFrame.pack(fill='both', expand=True, pady=10),
     def open_stock_chooser(self):
         hp.create_window(self)
 
     def set_middle_column(self, middle_column):
-        self.middle_column = middle_column    
+        self.middle_column = middle_column
 
     def create_stockBox(self, ticker, tickerPrice, flag):
         stock_box = ctk.CTkFrame(self.stocksFrame, height=50, width=10)
@@ -125,9 +125,8 @@ class RightColumn(ctk.CTkFrame):
         self.csvButton.pack()
 
     def open_csvFinder(self):
-        java_cmd = ['java', 'Take_Data']
-        subprocess.Popen(java_cmd)
         self.left_column.addStocksCsv()
+        subprocess.Popen(['java', 'Take_Data', 'csvLocation'])
         # (Add other UI elements for the right column)
 if __name__ == "__main__":
     Main('Stock Viewer')

@@ -4,11 +4,11 @@ import customtkinter as ctk
 import os
 import Helpers as hp
 import Main as main
-import tkinter as tk
 import yfinance as yf
 
 
 class CSVHelpers(ctk.CTkToplevel):
+
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
