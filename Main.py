@@ -6,9 +6,9 @@ import StockGraph as sg
 import csvHelpers as csvH
 import subprocess
 
-global tickerMap
 tickerMap = {}
-global csvLocation
+tickersSeen = []
+csvLocation = ''
 
 class Main(ctk.CTk):
     def __init__(self, title):
@@ -126,7 +126,8 @@ class RightColumn(ctk.CTkFrame):
 
     def open_csvFinder(self):
         self.left_column.addStocksCsv()
-        subprocess.Popen(['java', 'Take_Data', 'csvLocation'])
+        print(csvLocation)
+        subprocess.run(['java', 'Take_Data.java', 'csvLocation'])
         # (Add other UI elements for the right column)
 if __name__ == "__main__":
     Main('Stock Viewer')

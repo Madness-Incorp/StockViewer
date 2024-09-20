@@ -36,11 +36,12 @@ class Extra(ctk.CTkToplevel):
         ticker = self.search_entry.get().strip().upper()
         global current
         current = ticker
-        if ticker in main.tickerMap:
+        if ticker in main.tickersSeen:
             messagebox.showwarning("Warning", "Stock already selected")
             return
         result = self.fetch_stock_data(ticker)
         if result:
+            main.tickersSeen.append(ticker)
             self.search_entry.delete(0, tk.END)
             self.add_stock_to_parent(ticker, actStock)
         else:
