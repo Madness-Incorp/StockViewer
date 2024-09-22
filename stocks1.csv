@@ -1,0 +1,12 @@
+Action,Time,ISIN,Ticker,Name,No. of share,Price / share,Currency(Price/share),Exchange rate,Result,Currency(Result),Total,Currency(Total),Withholding tax,Currency(Withholding tax),Stamp duty reserve tax,Currency (Stamp duty reserve tax),Notes,ID,Currency conversion fee,Currency (Currency conversion fee)
+Market buy,17/01/2023 08:00,,AAPL,Apple Inc.,0.5,150,USD,1.05,,EUR,75,EUR,,,,,,,0.04,EUR
+Market buy,17/01/2023 08:00,,GOOGL,Alphabet Inc.,0.3,2800,USD,1.05,,EUR,84,EUR,,,,,,,0.06,EUR
+Market buy,17/01/2023 08:00,,AMZN,Amazon.com Inc.,0.4,3000,USD,1.05,,EUR,120,EUR,,,,,,,0.07,EUR
+Market buy,17/01/2023 08:00,,TSLA,Tesla Inc.,0.2,700,USD,1.05,,EUR,140,EUR,,,,,,,0.03,EUR
+Market buy,17/01/2023 08:00,,MSFT,Microsoft Corporation,1,280,USD,1.05,,EUR,280,EUR,,,,,,,0.05,EUR
+Market buy,17/01/2023 08:00,,NFLX,Netflix Inc.,0.5,500,USD,1.05,,EUR,250,EUR,,,,,,,0.04,EUR
+Market buy,17/01/2023 08:00,,NVDA,NVIDIA Corporation,0.8,600,USD,1.05,,EUR,480,EUR,,,,,,,0.05,EUR
+Market buy,17/01/2023 08:00,,INTC,Intel Corporation,1.5,50,USD,1.05,,EUR,75,EUR,,,,,,,0.02,EUR
+Market buy,17/01/2023 08:00,,META,Meta Platforms Inc.,0.7,350,USD,1.05,,EUR,245,EUR,,,,,,,0.03,EUR
+Market buy,17/01/2023 08:00,,BABA,Alibaba Group,0.6,200,USD,1.05,,EUR,120,EUR,,,,,,,0.04,EUR
+Market buy,17/01/2023 08:00,,ADBE,Adobe Inc.,0.4,500,USD,1.05,,EUR,200,EUR,,,,,,,0.04,EUR

@@ -1,14 +1,16 @@
-import subprocess
+import threading
 
 import customtkinter as ctk
 import Helpers as hp
 import StockGraph as sg
 import csvHelpers as csvH
 import subprocess
+import os
+
+from Global import get_csvLocationGlobal
 
 tickerMap = {}
 tickersSeen = []
-csvLocation = ''
 
 class Main(ctk.CTk):
     def __init__(self, title):
@@ -126,8 +128,10 @@ class RightColumn(ctk.CTkFrame):
 
     def open_csvFinder(self):
         self.left_column.addStocksCsv()
-        print(csvLocation)
-        subprocess.run(['java', 'Take_Data.java', 'csvLocation'])
-        # (Add other UI elements for the right column)
+        print("This is: " + get_csvLocationGlobal())
+        cmd = ['java', 'Take_Data', get_csvLocationGlobal()]
+        subprocess.Popen(cmd)
+
+# (Add other UI elements for the right column)
 if __name__ == "__main__":
     Main('Stock Viewer')

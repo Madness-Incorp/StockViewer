@@ -6,6 +6,8 @@ import Helpers as hp
 import Main as main
 import yfinance as yf
 
+from Global import set_csvLocationGlobal, get_csvLocationGlobal
+
 
 class CSVHelpers(ctk.CTkToplevel):
 
@@ -26,20 +28,24 @@ class CSVHelpers(ctk.CTkToplevel):
 
     def validateCSV(self, event):
         csvLocation = self.search_entry.get().strip()
-
         doesExist = os.path.isfile(csvLocation)
 
         if not doesExist:
             messagebox.showerror('Error', 'CSV File does not exist')
         else:
-            print('CSV File location:', csvLocation)
-            main.csvLocation = csvLocation
-            self.findStockTickers()
+            set_csvLocationGlobal(csvLocation)
+            print('CSV File location:', get_csvLocationGlobal())
+            self.findStockTickers(get_csvLocationGlobal())
         self.destroy()
 
-    def findStockTickers(self):
+    def findStockTickers(self, location):
         csvTickers = []
-        with open(main.csvLocation) as csvFile:
+
+        if location is None:
+            messagebox.showerror('Error', 'CSV File location has not been set')
+            return
+
+        with open(location) as csvFile:
             reader = csv.reader(csvFile, delimiter=',')
             for row in reader:
                 csvTickers.append(row[3])
@@ -58,12 +64,13 @@ class CSVHelpers(ctk.CTkToplevel):
 
     def add_selected_stocks(self, tickers):
         for ticker in tickers:
-            if ticker in main.tickerMap:
+            if ticker in main.tickersSeen:
                 messagebox.showwarning("Warning", "Stock already selected")
                 return
             result = self.fetch_stock_data(ticker)
             if result:
                 self.add_stock_to_parent(ticker, actStock)
+                main.tickersSeen.append(ticker)
             else:
                 messagebox.showerror("Error", "Ticker could not be found")
 
