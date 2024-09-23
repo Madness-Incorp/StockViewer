@@ -94,9 +94,10 @@ public class Take_Data {
     }
 
 
-    public static ArrayList<Take_Data> readFile(String csvFile) throws IOException {
+    public static ArrayList<Take_Data> readFile(String fillingCab) throws IOException {
         ArrayList<Take_Data> fullData = new ArrayList<>();
         //**  To be replaced with prompt for user to enter in the file path  **
+        String csvFile = fillingCab;
         String cvsSplitBy = ",";
         Scanner read = new Scanner(new File(csvFile));
 
