@@ -1,16 +1,19 @@
 import tkinter as tk
+from codecs import ignore_errors
+
 import matplotlib.pyplot as plt
+import pandas as pd
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import yfinance as yf
 import mplcursors
-from matplotlib.pyplot import arrow
+from pandas import DatetimeIndex
 
 
 class StockGraph():
     @staticmethod
-    def create_graph(stock_ticker, root):
+    def create_graph(stock_ticker, root, time_period):
         stock_for_graph = yf.Ticker(stock_ticker)
-        hist = stock_for_graph.history(period="1y")
+        hist = stock_for_graph.history(period=time_period)
 
         figure2 = plt.Figure(figsize=(5, 4), dpi=100)
         ax2 = figure2.add_subplot(111)
@@ -56,7 +59,6 @@ class StockGraph():
 
         # Add hover functionality to show price information using mplcursors
         cursor = mplcursors.cursor(line, hover=True)
-
 
         @cursor.connect("add")
         def on_add(sel):

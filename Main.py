@@ -9,6 +9,7 @@ import csvHelpers as csvH
 
 tickerMap = {}
 tickersSeen = []
+stock_id = None
 
 # Set global styles
 ctk.set_appearance_mode("dark")
@@ -18,7 +19,7 @@ class Main(ctk.CTk):
     def __init__(self, title):
         super().__init__()
         self.title(title)
-        self.geometry('1000x400')
+        self.geometry('1000x600')
         self.configure(fg_color="#333333")
 
         # Configure column weights for fixed width left column
@@ -116,7 +117,9 @@ class LeftColumn(ctk.CTkFrame):
 
     def print_graph(self, id):
         ticker = tickerMap[id]
-        sg.StockGraph.create_graph(ticker, self.middle_column.stock_graph_frame)
+        global stock_id
+        stock_id = ticker
+        sg.StockGraph.create_graph(ticker, self.middle_column.stock_graph_frame, "1y")
 
     def add_stocks_csv(self):
         if not self.csvStockCreated:
@@ -130,17 +133,97 @@ class MiddleColumn(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self.configure(fg_color="#333333")  # Dark grey background for middle column
-        self.pack_propagate(False)
+        self.grid_propagate(False)
+
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=3)
+        self.grid_rowconfigure(2, weight=1)
+
 
         # Add UI elements for the middle column here (main content, charts, etc.)
-        self.stock_info_label = ctk.CTkLabel(self, text="Stock Price Graph (For 1 year)", text_color="white", font=("Roboto", 20), fg_color="#333333")
-        self.stock_info_label.pack()
+        self.stock_info_label = ctk.CTkLabel(self, text="Stock Price Graph", text_color="white", font=("Roboto", 20), fg_color="#333333")
+        self.stock_info_label.grid(row=0, column=0, sticky="nsew")
 
         self.stock_graph_frame = ctk.CTkFrame(self, fg_color="#333333")
-        self.stock_graph_frame.pack(expand=True, fill='both')
-
         self.stock_graph_frame.grid_rowconfigure(0, weight=1)
         self.stock_graph_frame.grid_columnconfigure(0, weight=1)
+
+        self.stock_graph_periodFrame = ctk.CTkFrame(self, fg_color="#333333", height=10)
+        self.stock_graph_periodFrame.grid_columnconfigure(0, weight=1)
+        self.stock_graph_periodFrame.grid_columnconfigure(1, weight=1)
+        self.stock_graph_periodFrame.grid_columnconfigure(2, weight=1)
+        self.stock_graph_periodFrame.grid_columnconfigure(3, weight=1)
+        self.stock_graph_periodFrame.grid_columnconfigure(4, weight=1)
+        self.stock_graph_periodFrame.grid_rowconfigure(0, weight=1)
+        self.stock_5D_button = ctk.CTkButton(
+            self.stock_graph_periodFrame,
+            text=f"5d",
+            width=10,
+            fg_color="#007bff",
+            text_color="white",
+            font=("Roboto", 10),
+            corner_radius=6,
+            command=lambda: self.print_graph("5d")
+        )
+        self.stock_1M_button = ctk.CTkButton(
+            self.stock_graph_periodFrame,
+            text=f"1M",
+            width=10,
+            fg_color="#007bff",
+            text_color="white",
+            font=("Roboto", 10),
+            corner_radius=6,
+            command=lambda: self.print_graph("1mo")
+        )
+        self.stock_6M_button = ctk.CTkButton(
+            self.stock_graph_periodFrame,
+            text=f"6M",
+            width=10,
+            fg_color="#007bff",
+            text_color="white",
+            font=("Roboto", 10),
+            corner_radius=6,
+            command=lambda: self.print_graph("6mo")
+        )
+        self.stock_1Y_button = ctk.CTkButton(
+            self.stock_graph_periodFrame,
+            text=f"1Y",
+            width=10,
+            height=10,
+            fg_color="#007bff",
+            text_color="white",
+            font=("Roboto", 10),
+            corner_radius=6,
+            command=lambda: self.print_graph("1y")
+        )
+        self.stock_5Y_button = ctk.CTkButton(
+            self.stock_graph_periodFrame,
+            text=f"5Y",
+            width=10,
+            height=10,
+            fg_color="#007bff",
+            text_color="white",
+            font=("Roboto", 10),
+            corner_radius=6,
+            command=lambda: self.print_graph("5y")
+        )
+
+        self.stock_5D_button.grid(row=0, column=0, sticky='nsew',padx=10)
+        self.stock_1M_button.grid(row=0, column=1, sticky='nsew', padx=10)
+        self.stock_6M_button.grid(row=0,column=2, sticky='nsew', padx=10)
+        self.stock_1Y_button.grid(row=0,column=3, sticky='nsew', padx=10)
+        self.stock_5Y_button.grid(row=0,column=4, sticky='nsew', padx=10)
+
+        self.stock_graph_frame.grid(row=1, column=0, sticky='nsew')
+        self.stock_graph_periodFrame.grid(row=2, column=0, sticky='nsew')
+
+    def print_graph(self, period):
+        global stock_id
+        ticker = stock_id
+        sg.StockGraph.create_graph(ticker, self.stock_graph_frame, period)
+
+
         # (Add other UI elements for the middle column)
 
 
